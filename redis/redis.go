@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/go-redis/redis"
@@ -15,6 +16,7 @@ var (
 )
 
 func Init() {
+
 	m.Lock()
 	defer m.Unlock()
 
@@ -24,7 +26,7 @@ func Init() {
 	}
 
 	redisConfig := config.GetRedisConfig()
-
+	fmt.Println(redisConfig.GetEnabled())
 	if redisConfig != nil && redisConfig.GetEnabled() {
 		log.Log("初始化redis...")
 
