@@ -22,6 +22,7 @@ var (
 	etcdConfig              defaultEtcdConfig
 	mysqlConfig             defaultMysqlConfig
 	redisConfig             defaultRedisConfig
+	jwtConfig               defaultJwtConfig
 	profiles                defaultProfiles
 	m                       sync.RWMutex
 	inited                  bool
