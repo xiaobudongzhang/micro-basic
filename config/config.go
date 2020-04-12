@@ -82,6 +82,11 @@ func GetEtcdConfig() (ret EtcdConfig) {
 	return etcdConfig
 }
 
+// GetJwtConfig 获取Jwt配置
+func GetJwtConfig() (ret JwtConfig) {
+	return jwtConfig
+}
+
 // GetRedisConfig 获取Redis配置
 func GetRedisConfig() (ret RedisConfig) {
 	return redisConfig
