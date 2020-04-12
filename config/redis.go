@@ -50,6 +50,10 @@ func (r defaultRedisConfig) GetSentinelConfig() RedisSentinelConfig {
 	return r.sentinel
 }
 
+// GetPassword redis 密码
+func (r defaultRedisConfig) GetPassword() string {
+	return r.Password
+}
 func (s redisSentinel) GetEnabled() bool {
 	return s.Enabled
 }
