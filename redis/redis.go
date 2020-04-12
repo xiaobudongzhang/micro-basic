@@ -48,7 +48,7 @@ func Init() {
 	inited = true
 }
 
-func GetReis() *redis.Client {
+func GetRedis() *redis.Client {
 	return client
 }
 
