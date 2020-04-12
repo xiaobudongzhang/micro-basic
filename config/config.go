@@ -71,6 +71,7 @@ func Init() {
 
 	config.Get(defaultRootPath, "etcd").Scan(&etcdConfig)
 	config.Get(defaultRootPath, "mysql").Scan(&mysqlConfig)
+	config.Get(defaultRootPath, "jwt").Scan(&mysqlConfig)
 
 	inited = true
 }
