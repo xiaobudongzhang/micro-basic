@@ -1,96 +1,34 @@
 package config
 
 import (
-	"os"
-	"path/filepath"
-	"strings"
+	"fmt"
 	"sync"
 
-	"github.com/go-log/log"
-	"github.com/micro/go-micro/v2/config"
-	"github.com/micro/go-micro/v2/config/source"
-	"github.com/micro/go-micro/v2/config/source/file"
+	"honnef.co/go/tools/config"
 )
 
 var (
-	err error
+	m      sync.RWMutex
+	inited bool
+
+	c = &configurator{}
 )
 
-var (
-	defaultRootPath         = "app"
-	defaultConfigFilePrefix = "application-"
-	etcdConfig              defaultEtcdConfig
-	mysqlConfig             defaultMysqlConfig
-	redisConfig             defaultRedisConfig
-	jwtConfig               defaultJwtConfig
-	profiles                defaultProfiles
-	m                       sync.RWMutex
-	inited                  bool
-	sp                      = string(filepath.Separator)
-)
-
-func Init() {
-	m.Lock()
-	defer m.Unlock()
-
-	if inited {
-		log.Logf("init 过了")
-		return
-	}
-
-	appPath, _ := filepath.Abs(filepath.Dir(filepath.Join("."+sp, sp)))
-
-	pt := filepath.Join(appPath, "conf")
-	os.Chdir(appPath)
-
-	if err = config.Load(file.NewSource(file.WithPath(pt + sp + "application.yml"))); err != nil {
-		panic(err)
-	}
-
-	if err = config.Get(defaultRootPath, "profiles").Scan(&profiles); err != nil {
-		panic(err)
-	}
-
-	log.Logf("加载文件:path:%s,%+v\n", pt+sp+"application.yml", profiles)
-
-	if len(profiles.GetInclude()) > 0 {
-		include := strings.Split(profiles.GetInclude(), ",")
-
-		sources := make([]source.Source, len(include))
-
-		for i := 0; i < len(include); i++ {
-			filePath := pt + string(filepath.Separator) + defaultConfigFilePrefix + strings.TrimSpace(include[i]) + ".yml"
-			log.Logf("init path : %s\n", filePath)
-			sources[i] = file.NewSource(file.WithPath(filePath))
-		}
-
-		if err = config.Load(sources...); err != nil {
-			panic(err)
-		}
-	}
-
-	config.Get(defaultRootPath, "etcd").Scan(&etcdConfig)
-	config.Get(defaultRootPath, "mysql").Scan(&mysqlConfig)
-	config.Get(defaultRootPath, "jwt").Scan(&jwtConfig)
-	config.Get(defaultRootPath, "redis").Scan(&redisConfig)
-
-	inited = true
+type Configurator interface {
+	App(name string, config interface{}) (err error)
 }
 
-func GetMysqlConfig() (ret MysqlConfig) {
-	return mysqlConfig
+type configurator struct {
+	conf config.Config
 }
 
-func GetEtcdConfig() (ret EtcdConfig) {
-	return etcdConfig
-}
+func (c *configurator) App(name string, config interface{}) (err error) {
+	v := c.conf.Get(name)
+	if v != nil {
+		err = v.Scan(config)
+	} else {
+		err = fmt.Errorf("配置不存在 %s")
+	}
 
-// GetJwtConfig 获取Jwt配置
-func GetJwtConfig() (ret JwtConfig) {
-	return jwtConfig
-}
-
-// GetRedisConfig 获取Redis配置
-func GetRedisConfig() (ret RedisConfig) {
-	return redisConfig
+	return
 }
