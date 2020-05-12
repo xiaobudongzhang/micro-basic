@@ -1,14 +1,28 @@
 package basic
 
-import (
-	"github.com/xiaobudongzhang/micro-basic/config"
-	"github.com/xiaobudongzhang/micro-basic/db"
+import "github.com/micro/go-micro/config"
 
-	"github.com/xiaobudongzhang/micro-basic/redis"
+var (
+	pluginFuncs []func()
 )
 
-func Init() {
-	config.Init()
-	db.Init()
-	redis.Init()
+type Options struct {
+	EnableDB    bool
+	EnableRedis bool
+	cfgOps      []config.Option
+}
+
+type Option func(o *Options)
+
+func Init(opts ...config.Option) {
+
+	config.Init(opts...)
+
+	for _, f := range pluginFuncs {
+		f()
+	}
+}
+
+func Register(f func()) {
+	pluginFuncs = append(pluginFuncs, f)
 }
