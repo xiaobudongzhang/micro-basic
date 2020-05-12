@@ -6,7 +6,7 @@ type AppCfg struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
 	Address string `json:"address"`
-	Port    string `json:"port"`
+	Port    int    `json:"port"`
 }
 
 func (a *AppCfg) Addr() string {

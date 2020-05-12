@@ -1,6 +1,6 @@
 package basic
 
-import "github.com/micro/go-micro/config"
+import "github.com/xiaobudongzhang/micro-basic/config"
 
 var (
 	pluginFuncs []func()

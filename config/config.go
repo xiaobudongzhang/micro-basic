@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/micro/go-micro/util/log"
-	"honnef.co/go/tools/config"
+	"github.com/micro/go-micro/v2/config"
 )
 
 var (
@@ -47,7 +47,7 @@ func (c *configurator) init(ops Options) (err error) {
 		return
 	}
 
-	c.conf = config.NewConfig()
+	c.conf, _ = config.NewConfig()
 
 	err = c.conf.Load(ops.Sources...)
 	if err != nil {
