@@ -17,10 +17,12 @@ var (
 
 type Configurator interface {
 	App(name string, config interface{}) (err error)
+	Path(path string, config interface{}) (err error)
 }
 
 type configurator struct {
-	conf config.Config
+	conf    config.Config
+	appName string
 }
 
 func (c *configurator) App(name string, config interface{}) (err error) {
@@ -86,4 +88,16 @@ func Init(opts ...Option) {
 	c = &configurator{}
 
 	c.init(ops)
+}
+
+func (c *configurator) Path(path string, config interface{}) (err error) {
+
+	v := c.conf.Get(c.appName, path)
+	if v != nil {
+		err = v.Scan(config)
+	} else {
+		err = fmt.Errorf("配置不存在 err:%s", path)
+	}
+
+	return
 }
