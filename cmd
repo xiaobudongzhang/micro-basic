@@ -4,3 +4,6 @@
  
  go run main.go --registry=etcd --api_namespace=mu.micro.book.web  api --handler=web
  
+ 
+ jaeger-all-in-one --collector.zipkin.http-port=9411
+ 
