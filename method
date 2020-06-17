@@ -1,0 +1,4 @@
+Use the google.golang.org/grpc/metadata package and metadata.NewContext() to send metadata from the client-side.
+Use grpc.SendHeader() and grpc.SetTrailer() to send metadata from the server-side.
+Use the grpc.Header() and grpc.Trailer() CallOptions for receiving the Metadata on the client-side.
+Use metadata.FromContext() for receiving metadata on the server-side.
